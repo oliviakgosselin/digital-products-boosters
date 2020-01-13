@@ -22,6 +22,11 @@ const boosterData = [
     meetings: [1],
   },
   {
+    name: 'Node - Beginner',
+    kebabCaseName: 'node-beginner',
+    meetings: [1, 2, 3, 4],
+  },
+  {
     name: 'GraphQL - JS',
     kebabCaseName: 'graphql-js',
     meetings: [1, 2, 3, 4, 5],
