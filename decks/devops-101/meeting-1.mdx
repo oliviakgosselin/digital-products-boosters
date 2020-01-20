@@ -1,0 +1,344 @@
+import { MinuteTimer } from "../components/minute-timer";
+import { Split } from "@mdx-deck/layouts";
+export { theme } from "./theme.js";
+import { Link } from "@reach/router";
+import CodeLayout from "./code-layout";
+
+# [Digital Products Boosters](https://accenture.github.io/digital-products-boosters)
+
+## DevOps 101 - Meeting 1
+
+<Split>
+  <div>
+    <div style={{ "text-align": "left" }}>Meeting Pre-work</div>
+    <ol>
+      <li>
+        <Link to="/1">Reading 📕</Link>
+      </li>
+      <li>
+        <Link to="/2">Setup 🛠</Link>
+      </li>
+    </ol>
+  </div>
+  <div>
+    <div style={{ "text-align": "left" }}>Meeting Agenda</div>
+    <ol>
+      <li>
+        <Link to="/3">Discussion Questions 🤔</Link>
+      </li>
+      <li>
+        <Link to="/12">Exercises 💪🏼</Link>
+      </li>
+    </ol>
+  </div>
+</Split>
+
+---
+
+## Reading 📕
+
+1. [Docker Docs - Docker overview](https://docs.docker.com/engine/docker-overview/)
+2. [Docker Docs - docker pull command](https://docs.docker.com/engine/reference/commandline/pull/#extended-description)
+3. [Docker Docs - docker build command](https://docs.docker.com/engine/reference/commandline/build/#extended-description)
+4. [Docker Docs - docker start command](https://docs.docker.com/engine/reference/commandline/run/#extended-description)
+5. [Docker Docs - docker ps command](https://docs.docker.com/engine/reference/commandline/ps/)
+6. [Docker Docs - docker exec command](https://docs.docker.com/engine/reference/commandline/exec/#extended-description)
+7. [Docker Docs - Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+
+---
+
+<CodeLayout>
+
+## Setup 🛠
+
+1. Install Docker on your Mac by using homebrew.
+
+2. Start the Docker engine locally.
+
+3. Verify that you can run docker commands in the terminal.
+
+```bash
+$ brew cask install docker
+...
+$ open /Applications/Docker.app
+# It may take some time for Docker engine to start.
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND ...
+$ 
+```
+
+</CodeLayout>
+
+---
+
+# Discussion Questions 🤔
+
+_To be discussed during the meeting_
+
+---
+
+# Discussion Question #1
+
+Is Docker a virtualization technology? How does running an application in a container help with the development and deployment process of a product?
+
+<MinuteTimer minutes={3} isDiscussion />
+
+---
+
+# Discussion Question #1 - Answer
+
+<div style={{ fontSize: '0.8em' }}>
+
+Docker is **not** a virtualization technology! The container environment still runs on top of the host machine's kernel, which means that there are limitations on what is available to the containers (for example, there's no such option such as running an "OSX" container on top of a Windows or Linux kernel).
+
+Since containers are a loosely isolated environment, it helps to standardize development environments by making environment specific configurations (such as env variables, system libraries, or directory paths) portable. It helps simplify the environment setup process for developers, as well as avoid any issues caused by differences in execution environments (no more "well, it works on my machine" problems).
+
+</div>
+
+---
+
+# Discussion Question #2
+
+What are the differences between a Docker Image and a Docker Container?
+
+<MinuteTimer minutes={3} isDiscussion />
+
+---
+
+# Discussion Question #2 - Answer
+
+<div style={{ fontSize: '0.8em' }}>
+
+Docker Images are templates of how containers will be created and executed. Often times, images are based on another image, which supports creating modular operating environments and customizations. `Dockerfiles` are the templates which defines how an image should be built and what happens when a container starts running. Images are pre-built, and are independent of its executing environment (with some exceptions).
+
+Docker Containers are the running instances of an image. Containers are loosely isolated from other containers and the host machine, which means that you can control the level of isolation and interactions between containers and the host as needed. Since containers use pre-built images, they are limited in terms of customizing their run-time actions and executions. However, you would set run-time configuration values (such as network configurations, CPU and memory utilization, and storage) at this level.
+
+</div>
+
+---
+
+# Discussion Question #3
+
+Why is it best practice to design your Docker Image to run as an ephemeral container?
+
+<MinuteTimer minutes={3} isDiscussion />
+
+---
+
+# Discussion Question #3 - Answer
+
+<div style={{ fontSize: '0.8em' }}>
+
+In order for containers to remain modular and portable, they must be designed to run as an ephemeral instance. Nothing should persist across each container execution, and each execution should run independently of previous runs. If containers are not ephemeral, then any container failures or outages will directly impact the stability of your infrastructure. Instead, the infrastructure should be designed in such a way so that containers can be started, stopped, restarted, or terminated at any time with no impact to your application's stability.
+
+For any information that needs to persist (such as logs, sessions, network connections), another layer of your infrastructure should be responsible for handling and storing such information.
+
+</div>
+
+---
+
+# Discussion Question #4
+
+What does it mean for a docker container to have only one concern?
+
+<MinuteTimer minutes={3} isDiscussion />
+
+---
+
+# Discussion Question #4 - Answer
+
+<div style={{ fontSize: '0.8em' }}>
+
+A good practice is to have only one process/application running in your docker container at a time. If a container runs multiple applications/processes, a failure or error in one process may cause unintended effects in the other applications. By keeping the applications/containers isolated from each other, your infrastructure becomes more fault tolerant and resilient to failures.
+
+If the infrastructure requires that multiple applications need to work concurrently (such as having both a web server and database running at the same time), rather than running both on one container, you can run each in its own separate container, and use orchestration tools like `docker-compose`, `docker swarm`, and `kubernetes` to coordinate the communication between the containers (this will be covered in more details as part of a future meeting in this booster).
+
+</div>
+
+---
+
+# Exercises 💪🏼
+
+_To be completed during the meeting_
+
+---
+
+# Exercise 0
+
+1. Complete the [Setup](/2) if you haven't done so already.
+2. Run the necessary docker commands to execute the [hello-world](https://hub.docker.com/_/hello-world) docker image.
+
+<MinuteTimer minutes={5} />
+
+---
+
+<CodeLayout>
+
+# Exercise 0 - Answer
+
+```bash
+$ docker pull hello-world:latest
+$ docker run --rm hello-world
+# You should see a hello world message output to the console
+```
+
+</CodeLayout>
+
+---
+
+# Exercise 1
+
+Run the necessary docker commands to start an Ubuntu docker container and enter its internal bash environment, execute the `hostname` command, then exit the container.
+
+<MinuteTimer minutes={10} />
+
+---
+
+<CodeLayout>
+
+# Exercise 1 - Answer
+
+```bash
+$ docker pull ubuntu:latest
+$ docker run --rm -it ubuntu bash
+root@asdf1234qwerty:/# hostname
+asdf1234qwerty
+root@asdf1234qwerty:/# exit
+exit
+$
+```
+
+</CodeLayout>
+
+---
+
+# Exercise 2
+
+Run the necessary docker commands to start 3 detached Ubuntu docker containers, then confirm that they are running with the `docker ps` command.
+
+<MinuteTimer minutes={10} />
+
+---
+
+<CodeLayout>
+
+# Exercise 2 - Answer
+
+```bash
+$ docker pull ubuntu:latest
+$ docker run --rm -dit ubuntu bash
+7631c3ea0ac01d220f79acc7fbbdba3ea81dde0418de0aa7a96e8d50b90a220f
+$ docker run --rm -dit ubuntu bash
+990e2e48acde5c731740bd82c3b87c60afabcd7961e0e0de3f9bfab151f62a1c
+$ docker run --rm -dit ubuntu bash
+6da1dff861dfa657256a002c9ffec274a4fba85cdb384acfd213ef052fb776c9
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND ...
+6da1dff861df        ubuntu              "bash"  ...
+990e2e48acde        ubuntu              "bash"  ...
+7631c3ea0ac0        ubuntu              "bash"  ...
+```
+
+</CodeLayout>
+
+---
+
+# Exercise 3
+
+Choose one of the 3 detached containers started in exercise 2, and enter the bash shell of its session and run the `hostname` command.
+
+Exit the container, then run `docker ps` once more to confirm the number of running containers.
+
+<MinuteTimer minutes={10} />
+
+---
+
+<CodeLayout>
+
+# Exercise 3 - Answer
+
+```bash
+$ docker exec -it 6da1dff861df bash
+root@6da1dff861df:/# hostname
+6da1dff861df
+root@6da1dff861df:/# exit
+exit
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND ...
+6da1dff861df        ubuntu              "bash"  ...
+990e2e48acde        ubuntu              "bash"  ...
+7631c3ea0ac0        ubuntu              "bash"  ...
+```
+
+<div style={{ fontSize: '0.6em', width: '90%' }}>
+
+A few interesting things to note:
+
+- In the first command (`docker exec...`), use the CONTAINER ID value from the output of the `docker run` command, or from the first column in the `docker ps` command. You could also use the name of the container instead for a more human-readable reference. If the `--name` argument is not set as part of the `docker run` command, docker will randomly generate a name for the container.
+
+- Note that internally, the container's hostname is set to its CONTAINER ID value.
+
+- Also note that once you exit the `docker exec` session, the container continues to run. To stop the running containers, execute the `docker stop <CONTAINER ID or NAME>` command.
+
+</div>
+
+</CodeLayout>
+
+---
+
+<CodeLayout>
+
+# Exercise 4
+
+<div style={{ fontSize: '0.7em', width: '90%' }}>
+
+- Create a Dockerfile based on the `ubuntu:latest` image, install the `git` utility as part of the image, and have it execute the `git --version` command at the end.
+
+- Build the image, then run a container using that image to confirm that the `git --version` command successfully completes.
+
+- __Hint:__ To install the `git` utility, you'd need to run the following commands as part of the image:
+
+</div>
+
+```bash
+apt-get update
+apt-get install -y git
+```
+
+<MinuteTimer minutes={10} />
+
+</CodeLayout>
+
+---
+
+<CodeLayout>
+
+# Exercise 4 - Answer
+
+The Dockerfile should look like the following:
+
+```bash
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y \
+    git
+
+CMD git --version
+```
+
+Save the file as `Dockerfile` in a new directory somewhere locally. Run the following commands in a terminal from that directory:
+
+```bash
+$ docker build -t exercise .
+# The output of the Dockerfile execution will appear here. Once that is completed...
+$ docker run --rm exercise
+git version 2.17.1
+```
+
+</CodeLayout>
+
+---
+
+# Thanks for boosting!
+
+Have feedback? Please [Click here](https://github.com/Accenture/digital-products-boosters/issues/new?assignees=&labels=&template=feedback.md&title=%5BFEEDBACK%5D) to let us know 🙇‍♀️🙇‍♂️
