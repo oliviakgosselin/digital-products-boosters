@@ -29,7 +29,7 @@ describe("Public/Private Repo Authorization", () => {
 
   afterAll(teardown);
 
-  xit("Should return all public repositories and all repositories of current user", async () => {
+  it("Should return all public repositories and all repositories of current user", async () => {
     const res = await request(app)
       .get("/repos/")
       .send({ userId: currentUser.id });
@@ -39,7 +39,7 @@ describe("Public/Private Repo Authorization", () => {
     );
   });
 
-  xit("Should return all public repositories of a specific user", async () => {
+  it("Should return all public repositories of a specific user", async () => {
     const { id } = users.find(user => user.id != currentUser.id);
     const res = await request(app)
       .get(`/users/${id}/repos`)
@@ -48,7 +48,7 @@ describe("Public/Private Repo Authorization", () => {
     res.body.map(res => expect(res.userId === id && res.isPrivate === false).toEqual(true));
   });
 
-  xit("Should return all repositories if viewing your own repositories", async () => {
+  it("Should return all repositories if viewing your own repositories", async () => {
     const res = await request(app)
       .get(`/users/${currentUser.id}/repos`)
       .send({ userId: currentUser.id });
@@ -56,7 +56,7 @@ describe("Public/Private Repo Authorization", () => {
     res.body.map(res => expect(res.userId === currentUser.id).toEqual(true));
   });
 
-  xit("Should return a single repository that current user doesn't own if public", async () => {
+  it("Should return a single repository that current user doesn't own if public", async () => {
     const { id } = repos.find(repo => repo.isPrivate === false && repo.userId !== currentUser.id);
     const res = await request(app)
       .get(`/repos/${id}`)
@@ -67,7 +67,7 @@ describe("Public/Private Repo Authorization", () => {
     expect(res.body.userId !== currentUser.id).toEqual(true);
   });
 
-  xit("Should return a single repository if it's owned by current user", async () => {
+  it("Should return a single repository if it's owned by current user", async () => {
     const { id } = repos.find(repo => repo.userId === currentUser.id);
     const res = await request(app)
       .get(`/repos/${id}`)
@@ -77,7 +77,7 @@ describe("Public/Private Repo Authorization", () => {
     expect(res.body.userId).toEqual(currentUser.id);
   });
 
-  xit("Should not return a repository if it's not owned by current user and is private", async () => {
+  it("Should not return a repository if it's not owned by current user and is private", async () => {
     const { id } = repos.find(repo => repo.userId !== currentUser.id && repo.isPrivate === true);
     const res = await request(app)
       .get(`/repos/${id}`)

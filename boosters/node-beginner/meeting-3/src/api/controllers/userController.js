@@ -12,8 +12,7 @@ const createUser = async (req, res) => {
       firstName,
       lastName,
     });
-    res.status(201);
-    res.end(`Added user: ${user.id}`);
+    res.status(201).end(`Added user: ${user.id}`);
   } catch (e) {
     res.status(400);
     console.error(e);
@@ -25,7 +24,7 @@ const getUser = async (req, res) => {
   const { userId } = req.params;
 
   const user = await Users.findByPk(userId);
-  res.send(user);
+  res.status(200).send(user);
 };
 
 const getUsersRepo = async (req, res) => {
@@ -36,6 +35,6 @@ const getUsersRepo = async (req, res) => {
       userId,
     },
   });
-  res.send(repos);
+  res.status(200).send(repos);
 };
 module.exports = { getAllUsers, createUser, getUser, getUsersRepo };

@@ -11,7 +11,7 @@ const user = {
 describe("Create User", () => {
   afterEach(teardown);
 
-  xit("Should create a user", async () => {
+  it("Should create a user", async () => {
     const res = await request(app)
       .post("/users/")
       .send(user);

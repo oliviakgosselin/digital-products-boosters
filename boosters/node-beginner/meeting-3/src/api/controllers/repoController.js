@@ -3,13 +3,12 @@ const { Op } = require("sequelize");
 
 const getAllRepos = async (req, res) => {
   const repos = await Repos.findAll();
-  res.status(200);
-  res.send(repos);
+  res.status(200).send(repos);
 };
 
 const getRepo = async (req, res) => {
   const { repoId } = req.params;
   const repo = await Repos.findByPk(repoId);
-  res.send(repo);
+  res.status(200).send(repo);
 };
 module.exports = { getAllRepos, getRepo };
