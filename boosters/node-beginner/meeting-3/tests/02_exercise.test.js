@@ -24,7 +24,7 @@ describe("Repos", () => {
     return setup("Repos", repos)();
   });
   afterEach(teardown);
-  xit("Should return all repos", async () => {
+  it("Should return all repos", async () => {
     res = await request(app).get(`/repos`);
 
     expect(res.statusCode).toEqual(200);
