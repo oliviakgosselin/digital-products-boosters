@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+  jenkins_backup:
+    image: busybox
+    volumes:
+      - type: volume
+        source: jenkins_home
+        target: /tmp/jenkins_home
+      - type: bind
+        source: ./data
+        target: /tmp/source
+    networks:
+      - local
+    command: tar -czf /tmp/source/jenkins_home.tar /tmp/jenkins_home --exclude='tmp/jenkins_home/plugins' --exclude='tmp/jenkins_home/war'
+  gitlab_backup:
+    image: gitlab/gitlab-ce:12.2.5-ce.0
+    volumes:
+      - type: volume
+        source: gitlab_config
+        target: /etc/gitlab
+      - type: volume
+        source: gitlab_logs
+        target: /var/log/gitlab
+      - type: volume
+        source: gitlab_data
+        target: /var/opt/gitlab
+      - type: bind
+        source: ./data
+        target: /tmp/source
+    networks:
+      - local
+    command: >
+      bash -c "
+        head -n -5 /assets/wrapper > /tmp/wrapper &&
+        mv /tmp/wrapper /assets/wrapper &&
+        chmod +x /assets/wrapper &&
+        /assets/wrapper > /dev/null 2>/dev/null &&
+        gitlab-backup create BACKUP=export &&
+        mkdir /tmp/staging &&
+        cp /etc/gitlab/gitlab* /tmp/staging &&
+        mv /var/opt/gitlab/backups/export_gitlab_backup.tar /tmp/staging &&
+        tar -czf /tmp/source/gitlab.tar /tmp/staging"
+
+volumes:
+  jenkins_home:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
+
+networks:
+  local:
+    name: devops-101-export-net

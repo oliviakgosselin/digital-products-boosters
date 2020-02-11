@@ -1,0 +1,272 @@
+import { MinuteTimer } from "../components/minute-timer";
+import { Split } from "@mdx-deck/layouts";
+export { theme } from "./theme.js";
+import { Link } from "@reach/router";
+import CodeLayout from "./code-layout";
+
+# [Digital Products Boosters](https://accenture.github.io/digital-products-boosters)
+
+## DevOps 101 - Meeting 2
+
+<Split>
+  <div>
+    <div style={{ "text-align": "left" }}>Meeting Pre-work</div>
+    <ol>
+      <li>
+        <Link to="/1">Reading 📕</Link>
+      </li>
+      <li>
+        <Link to="/2">Setup 🛠</Link>
+      </li>
+    </ol>
+  </div>
+  <div>
+    <div style={{ "text-align": "left" }}>Meeting Agenda</div>
+    <ol>
+      <li>
+        <Link to="/3">Discussion Questions 🤔</Link>
+      </li>
+      <li>
+        <Link to="/10">Exercises 💪🏼</Link>
+      </li>
+    </ol>
+  </div>
+</Split>
+
+---
+
+## Reading 📕
+
+1. [Docker Docs - Docker Compose overview](https://docs.docker.com/compose/)
+2. [Docker Docs - Docker Compose getting started](https://docs.docker.com/compose/gettingstarted/)
+3. [Docker Docs - Docker Compose file reference](https://docs.docker.com/compose/compose-file/)
+4. [Jenkins - What is a Jenkins Pipeline?](https://jenkins.io/doc/book/pipeline/)
+5. [GitLab - The entire DevOps Lifecycle](https://docs.gitlab.com/ee/README.html#the-entire-devops-lifecycle)
+
+---
+
+<CodeLayout>
+
+## Setup 🛠
+
+1. Install Docker on your Mac by using homebrew.
+
+2. Start the Docker engine locally.
+
+```bash
+$ brew cask install docker
+...
+$ open /Applications/Docker.app
+# It may take some time for Docker engine to start.
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND ...
+$ 
+```
+
+3. From the root of the `digital-products-boosters` repository, run:
+
+```bash
+$ cd boosters/devops-101/meeting-2
+$ docker-compose -f data-import.yml up
+# Will take some time for the data import to complete
+$ docker-compose up -d
+```
+
+</CodeLayout>
+
+---
+
+# Discussion Questions 🤔
+
+_To be discussed during the meeting_
+
+---
+
+# Discussion Question #1
+
+When would you choose to utilize Docker Compose instead of running `docker` commands directly?
+
+<MinuteTimer minutes={3} isDiscussion />
+
+---
+
+# Discussion Question #1 - Answer
+
+<div style={{ fontSize: '0.6em' }}>
+
+Besides the several features and advantages listed on the Docker Compose overview page (multiple isolated environments, volume persistence, container management, etc), using a `docker-compose.yml` file helps to simplify the management and execution of containers. For example, using a `docker run` command to mount multiple volumes, set multiple environment variables, and map multiple ports will lead to one very long command with lots of flags and arguments. If any of those arguments need to be modified, changing the command quickly becomes cumbersome. By instead using a `docker-compose.yml` file to define the container's execution environment, it helps to simplify and easily define those arguments. Additionally, Docker applications can be easily shared by providing the `docker-compose.yml` file and executing one command to start the environment, rather than providing multiple `docker` commands.
+
+For executing a simple single docker container to run an individual task however, it is still easier to run the single `docker` command, rather than introduce an unnecessary layer of complexity with the `docker-compose.yml` file.
+
+</div>
+
+---
+
+# Discussion Question #2
+
+When would you use a Declarative Jenkins Pipeline format rather than a Scripted Pipeline format?
+
+<MinuteTimer minutes={3} isDiscussion />
+
+---
+
+# Discussion Question #2 - Answer
+
+<div style={{ fontSize: '0.8em' }}>
+
+The Declarative Pipeline syntax provides a structured and opinionated syntax to define the execution of a Jenkins Pipeline run. For tasks which require simpler automation steps, the Declarative syntax allows for newcomers to quickly define a new Pipeline.
+
+The Scripted Pipeline syntax provides greater degrees of flexibility, and instead is limited by the underlying Groovy engine itself in terms of capability and interaction. While the learning curve for writing a Scripted Pipeline is higher, it also provides a greater level of control and support for more complex Pipelines.
+
+</div>
+
+---
+
+# Discussion Question #3
+
+The GitLab Community Edition supports running the complete DevOps lifecycle within its platform. Why would we look to utilize Jenkins for the CI/CD portion instead?
+
+<MinuteTimer minutes={3} isDiscussion />
+
+---
+
+# Discussion Question #3 - Answer
+
+<div style={{ fontSize: '0.8em' }}>
+
+Both would be perfectly valid options to utilize if you were starting up a new CI/CD pipeline! Since Jenkins has been around for many years (since 2011), there is a long history of support, documentation, and plugins to support using the Jenkins ecosystem. GitLab has been increasing the features available within their platform as well, and many of the tasks you can do in Jenkins can also be done there as well.
+
+For this booster series, we want to leverage both Jenkins and GitLab in order to more easily support running a relatively complex DevOps infrastructure within a localized environment. Since many of the projects we work with utilize Jenkins, understanding how the system works and defining a Pipeline is an important skill to learn. Finally, the underlying concepts of setting up a DevOps pipeline can easily be translated and applied across many different platforms (Jenkins, GitLab, GitHub, CircleCI, TravisCI, etc).
+
+</div>
+
+---
+
+# Exercises 💪🏼
+
+_To be completed during the meeting_
+
+---
+
+# Exercise 0
+
+1. Complete the [Setup](/2) if you haven't done so already.
+2. Visit the local websites in a browser to verify that the applications started correctly (__Hint:__ check the README.md file under the meeting directory!).
+
+<MinuteTimer minutes={5} />
+
+---
+
+<CodeLayout>
+
+# Exercise 0 - Answer
+
+The websites would be located at:
+
+* http://localhost:3000
+* http://localhost:80
+
+The README.md file contains the login credentials for both websites. Note that GitLab usually takes some time to initialize after the docker container starts up. You can check the progress of the container by running the `docker ps` command, and wait for the status to report as `healthy`.
+
+</CodeLayout>
+
+---
+
+# Exercise 1
+
+In the local Jenkins instance, navigate to the `Example User / Example Project` job, then navigate to the `master` branch pipeline. Click on the `Build Now` link at the left of the page, and trigger a new build of the master branch. View the console output of the build, and verify the hostname output by the build script. Where is this build being executed?
+
+<MinuteTimer minutes={5} />
+
+---
+
+# Exercise 1 - Answer
+
+The hostname value will be different for each person, but you should note that the value matches with the Container ID value for the Jenkins docker container (you can double check by running the `docker ps` command in a terminal). This means that the build is being run on the same server as Jenkins.
+
+---
+
+# Exercise 2
+
+In the GitLab website, select the `Example Project` project on the landing page. Within this project, create a new branch off of the `master` branch. Verify that this new branch shows up in Jenkins as well after it gets created.
+
+<MinuteTimer minutes={5} />
+
+---
+
+# Exercise 2 - Answer
+
+This local environment has been completely configured for full connectivity between the local Jenkins server and the local GitLab server, including all webhooks and SSH certificates. When creating a new branch in GitLab, a webhook will get executed, which will trigger Jenkins to update its local references to the remote repository and find the new branch.
+
+---
+
+# Exercise 3
+
+In the GitLab website, navigate to the new branch you created, and select the `project.sh` file. Click on the `Edit` button on the website to modify the file directly in the browser, and add a new bash command to that script (try the `echo $BRANCH_NAME` command). Once you're done editing, ensure that the `Target Branch` value is set to the new branch you had just created, then click on the `Commit changes` button. Switch back to the Jenkins website, and you should be able to verify that the new branch has been automatically picked up for a new build. Verify the output of the `echo` command.
+
+<MinuteTimer minutes={10} />
+
+---
+
+<CodeLayout>
+
+# Exercise 3 - Answer
+
+The bash script should look like the following:
+
+```bash
+#!/bin/bash
+
+# Display hostname of the current CI node
+echo "Current CI hostname:"
+hostname
+
+# Display date and time on the current CI node
+echo "Current date/time:"
+date
+
+echo "Current Branch:"
+echo $BRANCH_NAME
+
+exit 0
+```
+
+`echo` should report as the name of the new branch you created.
+
+</CodeLayout>
+
+---
+
+# Exercise 4
+
+In the GitLab website, raise a new merge request (MR) from the new branch into master. After the MR is raised, verify that Jenkins automatically picked up the Merge Request and has built it. What is the output of the `echo $BRANCH_NAME` this time?
+
+<MinuteTimer minutes={5} />
+
+---
+
+# Exercise 4 - Answer
+
+The output should show the merge request ID for the project (for example, `MR-3`).
+
+---
+
+# Exercise 5
+
+In the Jenkins website, you can see that a build is executed for both your new branch as well as the MR raised to merge into the `master` branch. In a more realistic environment, we would probably want to avoid building every branch in a repository (such as feature branches), and only build release branches and MRs. Modify the project configuration in Jenkins to only build against the `master` and `develop` branches, while still ensuring that your new MR is active in Jenkins.
+
+<MinuteTimer minutes={5} />
+
+---
+
+# Exercise 5 - Answer
+
+In the Jenkins website, for the `Example User / Example Project` job, you can click on the `Configure` link at the left side of the page. Under the `Branch Sources > Behaviours > Filter by name (with wildcards)`, you will need to modify the `Include` field to get the desired behavior. The field should be adjusted to something like the following:
+
+`master develop MR-*`
+
+---
+
+# Thanks for boosting!
+
+Have feedback? Please [Click here](https://github.com/Accenture/digital-products-boosters/issues/new?assignees=&labels=&template=feedback.md&title=%5BFEEDBACK%5D) to let us know 🙇‍♀️🙇‍♂️
