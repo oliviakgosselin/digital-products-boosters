@@ -1,37 +1,37 @@
-import React from "react";
-import classNames from "./class-names.module.css";
-import srcGithub from "../../constants/GitHub-Mark-64px.png";
+import React from 'react';
+import classNames from './class-names.module.css';
+import srcGithub from '../../constants/GitHub-Mark-64px.png';
 
 const text = {
-  header1: "DIGITAL PRODUCTS",
-  header1End: "BOOSTERS 🚀"
+  header1: 'DIGITAL PRODUCTS',
+  header1End: 'BOOSTERS 🚀',
 };
 
 const makeBoosterMeetingUrl = boosterMeeting =>
-  `http://digital-products-boosters-${boosterMeeting}.s3-website-us-east-1.amazonaws.com`;
+  `https://boosters.intrepid.digital.accenture.com/${boosterMeeting}/`;
 
 const boosterData = [
   {
-    name: "React - Beginner",
-    kebabCaseName: "react-beginner",
-    meetings: [1, 2, 3, 4]
+    name: 'React - Beginner',
+    kebabCaseName: 'react-beginner',
+    meetings: [1, 2, 3, 4],
   },
   {
-    name: "Apollo Client - React",
-    kebabCaseName: "apollo-client-react",
-    meetings: [1]
+    name: 'Apollo Client - React',
+    kebabCaseName: 'apollo-client-react',
+    meetings: [1],
   },
   {
-    name: "GraphQL - JS",
-    kebabCaseName: "graphql-js",
-    meetings: [1, 2, 3, 4, 5]
-  }
+    name: 'GraphQL - JS',
+    kebabCaseName: 'graphql-js',
+    meetings: [1, 2, 3, 4, 5],
+  },
 ];
 const boosters = boosterData.map(booster => {
   const meetings = booster.meetings.map(number => ({
     number,
     url: makeBoosterMeetingUrl(`${booster.kebabCaseName}-meeting-${number}`),
-    name: `Meeting ${number}`
+    name: `Meeting ${number}`,
   }));
 
   return { ...booster, meetings };
