@@ -4,30 +4,29 @@ pipeline{
     timeout(time: 1, unit: 'HOURS')
     }
     stages{
-      stage('Install Dependencies'){
-        parallel{
-          stage('Deck Dependencies'){
-            steps{
-              sh 'yarn --cwd ./decks install'
-            }
-          }
-          stage('Website Dependencies'){
-            steps{
-            sh 'yarn --cwd ./website install'
-            }
-          }
+      stage('Clean and Prepare'){
+        steps{
+          sh '''
+            rm -rf ./bin
+            mkdir ./bin
+          '''
         }
       }
-      stage('Build Deck and Website'){
-          parallel{ 
-          stage('Build Deck'){
+      stage('Install and Build'){
+        parallel{
+          stage('Meeting Decks'){
             steps{
+              sh 'yarn --cwd ./decks install'
               buildAllSlides()
             }
           }
-          stage('Website Dependencies'){
+          stage('Website'){
             steps{
-              buildWebsite()
+              sh '''
+                yarn --cwd ./website install
+                yarn --cwd ./website react-scripts build
+                cp -r ./website/build/ ./bin
+              '''
             }
           }
         }
@@ -37,28 +36,13 @@ pipeline{
 }
 
 def buildAllSlides(){
-  sh """
-    #!/bin/bash
-    rm -r bin
-    mkdir bin
-    for file in $(find ./decks -path ./decks/node_modules -prune -false -o -name "*.mdx"); do
-      fileName=$(echo $file | cut -f 4 -d '/' | cut -f 1 -d '.')
-      dir=$(echo $file | cut -f 3 -d '/')
-      outputDir="${dir}-${fileName}"
-      file=$(echo $file | cut -f 1,3- -d '/')
-      yarn --cwd ./decks mdx-deck build $file -d dist/$outputDir --basepath="/${outputDir}"
+  sh '''
+    for FILE in $(find ./decks -path ./decks/node_modules -prune -false -o -name "*.mdx"); do
+      BOOSTER_NAME=$(echo $file | awk -F '[./]' '{print $4}')
+      MEETING_NUM=$(echo $file | awk -F '[./]' '{print $5}')
+      OUTPUTDIR="${BOOSTER_NAME}-${MEETING_NUM}"
+      yarn --cwd ./decks mdx-deck build "./${BOOSTER_NAME}/${MEETING_NUM}.mdx" -d "./dist/${OUTPUTDIR}" --basepath="/${OUTPUTDIR}"
     done
     cp -r ./decks/dist/ ./bin
-    rm -r ./decks/dist
-  """
-}
-
-def buildWebsite(){
-  sh """
-    rm -r bin/static
-    rm -f bin/* 2>/dev/null
-    yarn --cwd ./website react-scripts build
-    cp -r ./website/build/ ./bin
-    rm -r ./website/build
-  """
+  '''
 }
