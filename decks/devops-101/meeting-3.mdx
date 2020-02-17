@@ -1,0 +1,190 @@
+import { MinuteTimer } from "../components/minute-timer";
+import { Split } from "@mdx-deck/layouts";
+export { theme } from "./theme.js";
+import { Link } from "@reach/router";
+import CodeLayout from "./code-layout";
+
+# [Digital Products Boosters](https://accenture.github.io/digital-products-boosters)
+
+## DevOps 101 - Meeting 3
+
+<Split>
+  <div>
+    <div style={{ "text-align": "left" }}>Meeting Pre-work</div>
+    <ol>
+      <li>
+        <Link to="/1">Reading 📕</Link>
+      </li>
+      <li>
+        <Link to="/2">Setup 🛠</Link>
+      </li>
+    </ol>
+  </div>
+  <div>
+    <div style={{ "text-align": "left" }}>Meeting Agenda</div>
+    <ol>
+      <li>
+        <Link to="/3">Discussion Questions 🤔</Link>
+      </li>
+      <li>
+        <Link to="/10">Exercises 💪🏼</Link>
+      </li>
+    </ol>
+  </div>
+</Split>
+
+---
+
+## Reading 📕
+
+1. [Jenkins - Using a Jenkinsfile](https://jenkins.io/doc/book/pipeline/jenkinsfile/)
+2. [Jenkins - Pipeline Syntax](https://jenkins.io/doc/book/pipeline/syntax/)
+3. [Jenkins - Pipeline Best Practices](https://jenkins.io/doc/book/pipeline/pipeline-best-practices/)
+
+---
+
+<CodeLayout>
+
+## Setup 🛠
+
+1. Install Docker on your Mac by using homebrew.
+
+2. Start the Docker engine locally.
+
+```bash
+$ brew cask install docker
+...
+$ open /Applications/Docker.app
+# It may take some time for Docker engine to start.
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND ...
+$ 
+```
+
+3. From the root of the `digital-products-boosters` repository, run:
+
+```bash
+$ cd boosters/devops-101/meeting-3
+$ docker-compose -f data-import.yml up
+# Will take some time for the data import to complete
+$ docker-compose up -d
+```
+
+</CodeLayout>
+
+---
+
+# Discussion Questions 🤔
+
+_To be discussed during the meeting_
+
+---
+
+# Discussion Question #1
+
+What does it mean for a `Jenkinsfile` to be a "glue layer" to bind the different phases of a development lifecycle together? Why would a `Jenkinsfile` not be a replace for a build tool, and what does that imply about the Jenkins build environment?
+
+<MinuteTimer minutes={5} isDiscussion />
+
+---
+
+# Discussion Question #1 - Answer
+
+<div style={{ fontSize: '0.6em' }}>
+
+The `Jenkinsfile` defines many different stages, each corresponding to different parts of the development lifecycle (build, test, QA, deployment). By defining the individual steps within each stage, as well as how each stage would interact with each other, we effectively standardize each phase of the lifecycle and use the `Jenkinsfile` as the single-source-of-truth to define how the project should be created/developed/deployed. For example, before the application can be built, all unit and regression tests ran in a previous stage needs to succeed. Or when releasing a version of an application for QA testing, you should always be building and releasing the `Staging` version of the application for those tests.
+
+While it is theoretically possible to use the `Jenkinsfile` as the build tool for an application, it would be counter-productive and inefficient to do so, as existing build tools are better designed and supported to perform builds. This does imply that your Jenkins build environment should be configured to have those build tools installed and available for your build agent to use.
+</div>
+
+---
+
+# Discussion Question #2
+
+Why would it be best practice to have separate distinct workspaces or each pipeline execution or across multiple different pipelines?
+
+<MinuteTimer minutes={5} isDiscussion />
+
+---
+
+# Discussion Question #2 - Answer
+
+<div style={{ fontSize: '0.8em' }}>
+
+Intuitively, you may believe that running a pipeline within the same workspace would be the most time efficient method of performing tests and builds. Modern software development practices rely on using external libraries and dependencies within an application, and for each build, the pipeline would need to re-download and re-install the exact same libraries and dependencies each time. If we instead use the same workspace and have existing dependencies installed and available, we can shave minutes off of a single pipeline's build time. This is, after all, how developers would build and develop within their local environments.
+
+The reality however, is that by re-using existing workspaces, we can no longer guarantee that the build process is reproducible or deployable to new environments! By reusing the same workspace, we may inadvertently introduce a stateful dependency into the build process (such as a previous library which we thought was removed, but actually still exists and is being used in the runtime environment). By clearing out the workspace and using a new environment for each build, we guarantee that the build process is now stateless, and can be re-ran successfully in a different environment.
+</div>
+
+---
+
+# Discussion Question #3
+
+When working with secure credentials (such as API keys or database connection strings), what are some security considerations which should be kept in mind while designing and implementing a CI/CD pipeline?
+
+<MinuteTimer minutes={5} isDiscussion />
+
+---
+
+# Discussion Question #3 - Answer
+
+<div style={{ fontSize: '0.8em' }}>
+
+Using the Jenkins Credentials plugin will provide you with a simple layer of security (only select users can access/modify those credentials, and those credentials are masked in the console output in Jenkins), it's not a complete and infallible solution to securing those credentials. Since those credentials are exposed to the build environment, you will still need to ensure that the application is protected against any vulnerabilities which may expose those values. Additionally, a malicious actor may modify the application code or Jenkinsfile to expose/exfiltrate those credentials out of the build environment/application. Implementing strong branch security rules in your VCS, as well as restricting users' access in Jenkins, can help you protect your pipeline against those vulnerabilities.
+</div>
+
+---
+
+# Exercises 💪🏼
+
+_To be completed during the meeting_
+
+---
+
+# Exercise 0
+
+1. Complete the [Setup](/2) if you haven't done so already.
+2. Visit the local websites in a browser to verify that the applications started correctly (__Hint:__ check the README.md file under the meeting directory!).
+
+<MinuteTimer minutes={5} />
+
+---
+
+<CodeLayout>
+
+# Exercise 0 - Answer
+
+The websites would be located at:
+
+* http://localhost:3000
+* http://localhost:80
+
+The README.md file contains the login credentials for both websites. Note that GitLab usually takes some time to initialize after the docker container starts up. You can check the progress of the container by running the `docker ps` command, and wait for the status to report as `healthy`.
+
+</CodeLayout>
+
+---
+
+# Exercise 1
+
+<div style={{ fontSize: '0.8em' }}>
+
+A new example project is made within the GitLab instance called `Make It`. The project will build and execute a C++ program file which outputs a simple "Hello World" message. The project has been integrated with Jenkins already, but will not complete execution as no build agents have been defined.
+
+For this exercise, setup a build agent which will successfully build and execute this example project program. A hint is that the Dockerfile definition of a Jenkins worker node is available in the `boosters/devops-101/meeting-3` directory. You will need to complete the Dockerfile, as well as modify the `docker-compose.yml` file to start the container, then integrate the new worker node into the Jenkins instance to build the program.
+
+</div>
+
+<MinuteTimer minutes={20} />
+
+---
+
+# Exercise 1 - Answer
+
+
+
+---
+
+# Thanks for boosting!
+
+Have feedback? Please [Click here](https://github.com/Accenture/digital-products-boosters/issues/new?assignees=&labels=&template=feedback.md&title=%5BFEEDBACK%5D) to let us know 🙇‍♀️🙇‍♂️

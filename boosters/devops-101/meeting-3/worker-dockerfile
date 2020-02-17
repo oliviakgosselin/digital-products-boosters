@@ -1,0 +1,9 @@
+FROM jenkins/jnlp-slave
+
+USER root
+
+#
+# In this section, fill in the rest of the Dockerfile to complete the setup of the worker node.
+#
+
+USER jenkins

@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  jenkins.local:
+    build:
+      context: ./
+      dockerfile: jenkins-dockerfile
+    image: jenkins-gitlab
+    volumes:
+      - type: volume
+        source: jenkins_home
+        target: /var/jenkins_home
+    ports:
+      - "3000:8080"
+      - "50000:50000"
+  gitlab.local:
+    image: gitlab/gitlab-ce:12.2.5-ce.0
+    volumes:
+      - type: volume
+        source: gitlab_config
+        target: /etc/gitlab
+      - type: volume
+        source: gitlab_logs
+        target: /var/log/gitlab
+      - type: volume
+        source: gitlab_data
+        target: /var/opt/gitlab
+    ports:
+      - "80:80"
+      - "443:443"
+      - "22:22"
+
+volumes:
+  jenkins_home:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:

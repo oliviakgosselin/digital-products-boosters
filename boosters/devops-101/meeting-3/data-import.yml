@@ -1,0 +1,56 @@
+version: "3.7"
+
+services:
+  jenkins_import:
+    image: busybox
+    volumes:
+      - type: volume
+        source: jenkins_home
+        target: /tmp/jenkins_home
+      - type: bind
+        source: ./data
+        target: /tmp/source
+    networks:
+      - local
+    command: tar -xf /tmp/source/jenkins_home.tar -C /
+  gitlab_import:
+    image: gitlab/gitlab-ce:12.2.5-ce.0
+    volumes:
+      - type: volume
+        source: gitlab_config
+        target: /etc/gitlab
+      - type: volume
+        source: gitlab_logs
+        target: /var/log/gitlab
+      - type: volume
+        source: gitlab_data
+        target: /var/opt/gitlab
+      - type: bind
+        source: ./data
+        target: /tmp/source
+    networks:
+      - local
+    command: >
+      bash -c "
+        head -n -5 /assets/wrapper > /tmp/wrapper &&
+        mv /tmp/wrapper /assets/wrapper &&
+        chmod +x /assets/wrapper &&
+        /assets/wrapper > /dev/null 2>/dev/null &&
+        tar -xvf /tmp/source/gitlab.tar -C /tmp &&
+        cp /tmp/tmp/staging/export_gitlab_backup.tar /var/opt/gitlab/backups/ &&
+        chown git.git /var/opt/gitlab/backups/*.tar &&
+        gitlab-ctl stop unicorn &&
+        gitlab-ctl stop sidekiq &&
+        gitlab-backup restore BACKUP=export force=yes > /dev/null 2>/dev/null &&
+        /bin/cp -rf /tmp/tmp/staging/gitlab-secrets.json /etc/gitlab/ &&
+        gitlab-ctl reconfigure > /dev/null 2>/dev/null"
+
+volumes:
+  jenkins_home:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
+
+networks:
+  local:
+    name: devops-101-import-net
