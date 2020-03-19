@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import CommentsSection from "@/components/comments_section/comments_section.vue";
 
-describe("comment_section.vue", () => {
+xdescribe("comment_section.vue", () => {
   const createWrapper = propsData => mount(CommentsSection, { propsData });
   let props;
 

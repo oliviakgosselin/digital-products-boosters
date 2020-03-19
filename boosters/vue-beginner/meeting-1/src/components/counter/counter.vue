@@ -1,8 +1,6 @@
 <template>
   <div class="counter">
-    <span class="btn decrementer" @click="bike.decrement()">-</span>
-    <span class="total">{{ bike.qty }}</span>
-    <span class="btn incrementer" @click="bike.increment()">+</span>
+    <!-- TODO: Fill out this section! -->
   </div>
 </template>
 

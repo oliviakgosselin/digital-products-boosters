@@ -1,13 +1,6 @@
 <template>
   <div class="bike_viewer">
-    <button class="previous" @click="previousSlide()">PREVIOUS</button>
-    <button class="next" @click="nextSlide()">NEXT</button>
-    <BikeImage
-      :comments="activeBike.comments"
-      :image-url="activeBike.bikeImage"
-      :name="activeBike.name"
-    />
-    <Inventory :bike="activeBike" :key="`bike-${activeBike.id}`" />
+    <!-- TODO: Fill out this section! -->
   </div>
 </template>
 

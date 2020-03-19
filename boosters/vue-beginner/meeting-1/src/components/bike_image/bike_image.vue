@@ -1,8 +1,6 @@
 <template>
   <div class="bike_image">
-    <img :alt="name" :src="imageUrl" />
-    <div class="title">{{ name }}</div>
-    <CommentsSection :comments="comments" />
+    <!-- TODO: Fill out this section! -->
   </div>
 </template>
 

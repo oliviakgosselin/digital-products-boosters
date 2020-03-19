@@ -1,7 +1,6 @@
 <template>
   <div class="comment">
-    <span>{{ text }}</span>
-    <span> - {{ user.firstName }} {{ user.lastName }}</span>
+    <!-- TODO: Fill out this section! -->
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import BikeImage from "@/components/bike_image/bike_image.vue";
 
-describe("bike_image.vue", () => {
+xdescribe("bike_image.vue", () => {
   const createWrapper = propsData => mount(BikeImage, { propsData });
   let props;
 

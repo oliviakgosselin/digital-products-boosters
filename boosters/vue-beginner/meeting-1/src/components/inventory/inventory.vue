@@ -1,8 +1,6 @@
 <template>
   <div class="inventory">
-    <div>Price: ${{ bike.price }}</div>
-    <Counter :bike="bike" />
-    <div>Stock Value: ${{ stockValue }}</div>
+   <!-- TODO: Fill out this section! -->
   </div>
 </template>
 

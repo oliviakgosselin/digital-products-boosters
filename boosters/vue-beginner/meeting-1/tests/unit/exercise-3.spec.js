@@ -1,7 +1,7 @@
 import { shallowMount } from "@vue/test-utils";
 import Counter from "@/components/counter/counter.vue";
 
-describe("counter.vue", () => {
+xdescribe("counter.vue", () => {
   const createWrapper = propsData => shallowMount(Counter, { propsData });
   const props = {
     bike: {

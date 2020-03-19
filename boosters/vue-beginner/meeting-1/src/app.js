@@ -1,10 +1,3 @@
-import BikeImage from "./components/bike_image/bike_image.vue";
-import BikeViewer from "./components/bike_viewer/bike_viewer.vue";
-import Comment from "./components/comment/comment.vue";
-import CommentsSection from "./components/comments_section/comments_section.vue";
-import Counter from "./components/counter/counter.vue";
-import Inventory from "./components/inventory/inventory.vue";
-
 import {
   decrementInventory,
   getBike,
@@ -46,12 +39,5 @@ export default {
       bike.increment = this.incrementInventory(bike.id);
     });
   },
-  components: {
-    BikeImage,
-    BikeViewer,
-    Comment,
-    CommentsSection,
-    Counter,
-    Inventory
-  }
+  components: { }
 };
